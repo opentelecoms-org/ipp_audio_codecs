@@ -28,32 +28,32 @@ LDFLAGS=-static
 #IPPCORE=
 
 # For Pentium I
-#OPTIMIZE= -O6 -march=pentium  -mcpu=pentium -ffast-math -fomit-frame-pointer -DIPPCORE_NO_SSE
+#OPTIMIZE= -O6 -march=pentium  -mtune=pentium -ffast-math -fomit-frame-pointer -DIPPCORE_NO_SSE
 #IPPCORE=px
 
 # For PII
-#OPTIMIZE=-O6 -march=pentium2 -mcpu=pentium2 -ffast-math -fomit-frame-pointer -DIPPCORE_NO_SSE
+#OPTIMIZE=-O6 -march=pentium2 -mtune=pentium2 -ffast-math -fomit-frame-pointer -DIPPCORE_NO_SSE
 #IPPCORE=px
 
 # For PIII
-#OPTIMIZE= -O6 -mcpu=pentium3 -march=pentium3 -ffast-math -fomit-frame-pointer
+#OPTIMIZE= -O6 -mtune=pentium3 -march=pentium3 -ffast-math -fomit-frame-pointer
 #IPPCORE=a6
 
 # For PIII no SSE
-#OPTIMIZE= -O6 -mcpu=pentium3 -march=pentium3 -ffast-math -fomit-frame-pointer -mno-sse
+#OPTIMIZE= -O6 -mtune=pentium3 -march=pentium3 -ffast-math -fomit-frame-pointer -mno-sse
 #IPPCORE=a6
 
 # For P4
-OPTIMIZE= -O6 -march=pentium4 -mcpu=pentium4 -ffast-math -fomit-frame-pointer
+OPTIMIZE= -O6 -march=pentium4 -mtune=pentium4 -ffast-math -fomit-frame-pointer
 IPPCORE=w7
 # optional
 
 # For P4 no SSE
-#OPTIMIZE= -O6 -march=pentium4 -mcpu=pentium4 -ffast-math -fomit-frame-pointer -no-sse
+#OPTIMIZE= -O6 -march=pentium4 -mtune=pentium4 -ffast-math -fomit-frame-pointer -no-sse
 #IPPCORE=w7
 
 # For Athlon (untested)
-#OPTIMIZE= -O6 -march=athlon   -mcpu=athlon -ffast-math -fomit-frame-pointer
+#OPTIMIZE= -O6 -march=athlon   -mtune=athlon -ffast-math -fomit-frame-pointer
 #IPPCORE=a6
 
 # For debugging
