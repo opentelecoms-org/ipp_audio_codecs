@@ -1,0 +1,355 @@
+<HTML><HEAD><TITLE>Intel® Integrated Performance Primitives Sample Readme</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="Microsoft FrontPage 6.0" name=GENERATOR></HEAD>
+<BODY text=#000000 bgColor=#ffffff>
+<CENTER>
+<H1><B><I>Intel<SUP>®</SUP> Integrated Performance Primitives<BR>G.723.1A
+Sample for Linux*</I></B></H1></CENTER>
+<H5><A 
+href="#Disclaimer">Disclaimer</A><BR><A 
+href="#License_Definitions">License 
+Definitions</A><BR><A 
+href="#Overview">Overview</A><BR><A 
+href="#System_Requirements">System 
+Requirements</A><BR><A 
+href="#Package_Contents">Package 
+Contents</A> <BR><A 
+href="#Installation">Installation</A> 
+<BR><A 
+href="#How_to_Build_Source_Code">How 
+to Build Source Code</A><BR><A 
+href="#Running_the_Software">Running 
+the Software</A><BR><A 
+href="#Support">Technical Support 
+and Feedback</A><BR>&nbsp;</H5>
+<H2><A name=Disclaimer></A>Disclaimer</H2>
+<P class=MsoNormal style="mso-layout-grid-align: none"><SPAN 
+style="FONT-SIZE: 10pt; COLOR: windowtext; mso-bidi-font-size: 7.5pt">INFORMATION 
+IN THIS DOCUMENT IS PROVIDED IN CONNECTION WITH INTEL<SUP>®</SUP> PRODUCTS. NO 
+LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR OTHERWISE, TO ANY INTELLECTUAL 
+PROPERTY RIGHTS IS GRANTED BY THIS DOCUMENT. EXCEPT AS PROVIDED IN INTEL'S TERMS 
+AND CONDITIONS OF SALE FOR SUCH PRODUCTS, INTEL ASSUMES NO LIABILITY WHATSOEVER, 
+AND INTEL DISCLAIMS ANY EXPRESS OR IMPLIED WARRANTY, RELATING TO SALE AND/OR USE 
+OF INTEL PRODUCTS INCLUDING LIABILITY OR WARRANTIES RELATING TO FITNESS FOR A 
+PARTICULAR PURPOSE, MERCHANTABILITY, OR INFRINGEMENT OF ANY PATENT, COPYRIGHT OR 
+OTHER INTELLECTUAL PROPERTY RIGHT. </SPAN></P>
+<P>Intel products are not intended for use in medical, life saving, life 
+sustaining, critical control or safety systems, or in nuclear facility 
+applications. Intel may make changes to specifications and product descriptions 
+at anytime, without notice.</P>
+<H2><A name=License_Definitions></A>License Definitions</H2>
+<p>By downloading and installing this sample, you hereby agree that the
+accompanying Materials are being provided to you under the terms and conditions
+of the End User License Agreement for the Intel<sup>&#174;</sup> Integrated Performance Primitives
+product previously accepted by you. Please refer to the file <b>
+<a href="../ipplic.htm">ipplic.htm</a></b> for more information.</p>
+<p>G.723.1/A are international standards promoted by <span lang="EN-US" style="mso-ansi-language: EN-US">ITU-T
+(</span><a href="http://www.itu.int/publications/itut.html"><span lang="EN-US" style="mso-ansi-language: EN-US">http://www.itu.int/publications/itut.html</span></a><span lang="EN-US" style="mso-ansi-language: EN-US">)
+</span>and other organizations. Implementations of these standards, or the
+standard enabled platforms may require licenses from various entities, including
+Intel Corporation.<font size="-2"></p>
+</font>
+<H2><A name=Overview></A>Overview</H2>
+<p class="MsoNormal"><span class="GramE" lang="EN-US" style="mso-ansi-language: EN-US">The
+multi-thread encoder and decoder samples fully compliant with ITU-T G.723.1/A.</span><span lang="EN-US" style="mso-ansi-language: EN-US">
+The G.723.1/A has been implemented using Intel<sup>®</sup> Integrated
+Performance Primitives (Intel<sup>® </sup>IPP) Speech Coding functions.&nbsp;&nbsp;
+<O:P>
+</O:P>
+</span></p>
+<p><span lang="EN-US" style="mso-ansi-language: EN-US">Additional information on
+this software as well as other Intel<sup>®</sup> Software Development Products
+is available at </span><a href="http://developer.intel.com/software/products/"><span lang="EN-US" style="mso-ansi-language: EN-US">http://developer.intel.com/software/products/</span></a><span lang="EN-US" style="mso-ansi-language: EN-US">.
+<O:P>
+</O:P>
+</span></p>
+
+<H2><A name=System_Requirements></A>System Requirements</H2>
+<p><b><font size="-1">Recommended hardware:</font></b></p>
+<ul>
+  <li>A system based on the Intel<sup>®</sup> Pentium<sup>®</sup> 4 processor
+    with 128 megabytes of RAM, or better.</li>
+</ul>
+<b><font size="-1">Hardware requirements:</font></b>
+<ul>
+  <li>A system based on a Intel<sup>®</sup> Pentium<sup>®</sup> processor,
+    Intel<sup>®</sup> Xeon(TM) processor, or subsequent IA-32 processor</li>
+</ul>
+<b><font size="-1">Software requirements:</font></b>
+<ul>
+  <li>Intel<sup>®</sup> IPP 4.1 for Linux*, or later
+  <li>Linux* distributions with 2.4.x kernels
+  <li>Intel<sup>®</sup> C++ Compiler for Linux 8.0, or later
+  <li>GNU* Compiler g++ 3.2, or later</li>
+</ul>
+<H2><A name=Package_Contents></A>Package Contents</H2><span style="FONT-WEIGHT: normal; FONT-SIZE: 12pt; mso-bidi-font-size: 13.5pt">The
+</span><b><span style="FONT-SIZE: 12pt; mso-bidi-font-size: 13.5pt">Intel</span><sup>®</sup>
+<span style="FONT-SIZE: 12pt; mso-bidi-font-size: 13.5pt">IPP G.723.1A Sample
+for Linux*</span></b> <span style="FONT-WEIGHT: normal; FONT-SIZE: 12pt; mso-bidi-font-size: 13.5pt">package
+contains the following:&nbsp;</span><span style="FONT-WEIGHT: normal; FONT-SIZE: 12pt; COLOR: red; mso-bidi-font-size: 10.0pt"><O:P>
+</O:P>
+</span><br>
+&nbsp;
+<table height="621" width="100%" border="1">
+  <tbody>
+    <tr>
+    <td width="100%" bgcolor="#C0C0C0" colspan="2"><b><span style='mso-bidi-font-size: 10.0pt'>
+	./ipp_sample/</span>speech-coding<span style='mso-bidi-font-size: 10.0pt'>/</span></b></td>
+  	</tr>
+	<tr>
+    <td width="50%">ipplic<span style="mso-bidi-font-size: 10.0pt">.htm<u1:p> </span></td>
+    <td width="50%">End User License Agreement</td>
+  	</tr>
+	<tr>
+    <td width="50%">support.txt</td>
+    <td width="50%">Contains information for technical support</td>
+  	</tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="19"><b>./ipp_sample/speech-coding/G723.1/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">Makefile</td>
+      <td width="50%" height="18">G.723.1 Sample Makefile</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">readme.htm</td>
+      <td width="50%" height="18">This file</td>
+    </tr>
+    <tr>
+    <td width="50%" height="26">build.sh</td>
+    <td width="50%" height="26">Shell script to build the sample's executable 
+    files</td>
+  	</tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="18"><b>
+		./ipp_sample/speech-coding/G723.1/samples/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723decoder.c</td>
+      <td width="50%" height="18">Main source file for decoder</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723decoder.h</td>
+      <td width="50%" height="18">Main header file for decoder</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723encoder.c</td>
+      <td width="50%" height="18">Main source file for encoder</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723encoder.h</td>
+      <td width="50%" height="18">Main header file for encoder</td>
+    </tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="19"><b>
+		./ipp_sample/speech-coding/G723.1/api/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">decg723.c</td>
+      <td width="50%" height="18">G.723.1A functions for decoding speech</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">encg723.c</td>
+      <td width="50%" height="18">G.723.1A functions for encoding speech</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723ipp.h</td>
+      <td width="50%" height="18">Header file</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">owng723.c</td>
+      <td width="50%" height="18">Auxiliary functions for encoding/decoding</td>
+    </tr>
+    <tr>
+      <td width="50%" height="15">owng723.h</td>
+      <td width="50%" height="15">Speech coder constants, types and inner
+        functions definition header file</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">scratchmem.h</td>
+      <td width="50%" height="18">Local memory definition header file&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="18"><b>
+		./ipp_sample/speech-coding/G723.1/include/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">g723api.h</td>
+      <td width="50%" height="18">API header file</td>
+    </tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="18"><b>
+		./ipp_sample/speech-coding/G723.1/vm/include/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">vm_thread.h</td>
+      <td width="50%" height="18">Header file containing definition of cross
+        platform functionality, which provides threading support</td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">vm_types.h</td>
+      <td width="50%" height="18">Header file containing definition of cross
+        platform types, which are used in definitions of cross platform
+        functionality</td>
+    </tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="18"><b>
+		./ipp_sample/speech-coding/G723.1/vm/include/sys/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">vm_types_linux32.h</td>
+      <td width="50%" height="18">Header file containing definition of cross
+        platform types for IA-32 platforms running Linux*</td>
+    </tr>
+    <tr>
+      <td width="100%" bgColor="#c0c0c0" colSpan="2" height="18"><b>
+		./ipp_sample/speech-coding/G723.1/vm/include/src/</b></td>
+    </tr>
+    <tr>
+      <td width="50%" height="18">vm_thread_linux32.c</td>
+      <td width="50%" height="18">Source file containing implementation of
+        threading support for IA-32 platforms running Linux*</td>
+    </tr>
+  </tbody>
+</table>
+<H2><A name=Installation></A>Installation</H2>
+<p>Extract all files in l_ipp-sample-speech-coding_*.tgz to a desired folder. Please make sure
+to preserve the directory structure. The files for the G.723 sample will be
+found in the ./ipp_sample/speech-coding/G723.1/ folder.</p>
+
+<H2><A name=How_to_Build_Source_Code></A>How to Build Source Code</H2>
+
+<p class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'>Verify
+that the IPPROOT environment variables contain the path where the IPP package
+is installed.</p>
+<p class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'>
+<b>Evaluation Users: </b>If you are using an Evaluation version of Intel(R) IPP, 
+please make sure that IPPROOT is changed to: <b>/opt/intel/ipp41_eval/ia32_itanium</b> 
+(using the default install directory).</p>
+
+<p>Execute the file <b>build.sh</b>
+to build the G.723.1.A coder sample.<span style="COLOR: windowtext; mso-bidi-font-size: 7.5pt"></O:P>
+</span></p>
+<H2><A name=Running_the_Software></A>Running the Software</H2>
+<p>After building, be sure that the <b>LD_LIBRARY_PATH</b> environment variable 
+includes the directories of the .so files from the Intel<sup>®</sup> IPP 
+installation. This can be accomplished by entering the following at the command 
+prompt:&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>export LD_LIBRARY_PATH=/opt/intel/ipp41/ia32_itanium/sharedlib:/opt/intel/ipp41/ia32_itanium/sharedlib/linux32:$LD_LIBRARY_PATH</p>
+<p>or by running the shell script <b>ippvars32.sh</b> from the Intel<sup>®</sup> 
+IPP installation (located in /opt/intel/ipp41/ia32_itanium/tools/env/ by default).</p>
+<p>To run one of the G.723.1A encoder sample, type:</p>
+<p>g723encoder [options] &lt;inPCMFile&gt; &lt;outBitstreamTestFile&gt;&nbsp;</p>
+<p>Encoder option list:&nbsp;</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&nbsp;&nbsp;&nbsp;&nbsp;
+-r63|r53|r&lt;filename&gt;&nbsp; bit rates 6.3 or 5.3 kbit/s or bit rates given
+by file on per frame basis.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -Noh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+high pass filter off, default: high pass filter on.</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&nbsp;&nbsp;&nbsp;&nbsp; -v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Voice activity detection (VAD) enabled.&nbsp; Default: VAD disabled.&nbsp;</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&nbsp;&nbsp;&nbsp;&nbsp; -n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+option reports.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+write to codecspeed.csv file information about coder performance.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -s&nbsp; &lt;rep&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+repeater, how many times input file shall be encoded without reset of encoder,&nbsp;
+default: &lt;rep&gt;=1<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -t&nbsp; &lt;num&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+number of threads to perform the same encoding operation , default: &lt;num&gt;=1.</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&lt;inPCMFile&gt; - input file
+contains 16-bit 8 KHz PCM to encode,</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&lt;outBitstreamTestFile&gt; - output file,
+contains the encoded bit-stream in test vectors format.</p>
+<p>To run one of the G.723.1A decoder samples, type:&nbsp;</p>
+<p>g723decoder [options] &lt;inBitstreamTestFile&gt; &lt;outPCMFile&gt;&nbsp;</p>
+<p>Option list:&nbsp;</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&nbsp;&nbsp;&nbsp;&nbsp;
+-r63|r53|r&lt;filename&gt;&nbsp; bit rates 6.3 or 5.3 kbit/s or bit rates given
+by file on per frame basis.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -Nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+post filter off, default: post filter on.</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&nbsp;&nbsp;&nbsp;&nbsp; -n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+output additional information.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+write to codecspeed.csv file information about coder performance.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -s&nbsp; &lt;num&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+repeater, how many times to repeat an operation.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -t&nbsp; &lt;num&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+number of threads , default: one thread.</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&lt;inBitstreamTestFile&gt; - input file
+contains bit-stream to decode,</p>
+<p style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 3px">&lt;outPCMFile&gt; - output file, to
+write the decoded 16-bit 8 KHz PCM. </p>
+<p>NOTE: The bit-stream and 16-bit&nbsp; PCM files are used in the format of the
+test files of&nbsp; the G.723.1/A simulation software which is available via&nbsp;
+ITU-T official WEB site. To check the bit-to-bit exactness against them,
+correspondent bit-stream and PCM test files shall be used in pair.&nbsp;</p>
+<H2><A name=Support></A>Technical Support and Feedback</H2>
+<p>Your feedback on the Intel IPP samples is very important to us and your input 
+will be considered for future releases. </p>
+<p>When building original sample code, let us know if you have any problems 
+with:</p>
+<ol>
+	<li>Installation</li>
+	<li>Compiling errors</li>
+	<li>Linking errors</li>
+	<li>Runtime errors or incorrect output</li>
+</ol>
+<p>To receive technical support and product updates for the tools provided in 
+this product you need to register at the
+<a href="https://shale.intel.com/registrationcenter/register.asp">Intel® 
+Registration Center</a> and click on &quot;Create New Account&quot;.</p>
+<p>For information about the Intel<sup>®</sup> IPP's FAQ's, tips and tricks, and 
+other support information, please visit:
+<a href="http://support.intel.com/support/performancetools/libraries/">
+http://support.intel.com/support/performancetools/libraries/</a></p>
+<p><b>Note:</b><br>
+If you are having trouble registering or unable to access your Premier Support 
+account, contact <b>developer.support@intel.com</b>. Please do not email your 
+technical issue to <b>developer.support@intel.com</b> as it is not a secure 
+medium.</p>
+<p>To submit an issue via the Intel<sup>®</sup> Premier Support website please 
+perform the following steps:</p>
+<ol type="1">
+	<li>Ensure that Java* and JavaScript* are enabled in your browser. 
+	</li>
+	<li>Go to <a href="https://premier.intel.com/">https://premier.intel.com/</a>. 
+	</li>
+	<li>Type in your Login and Password.&nbsp; Both are case-sensitive. 
+	</li>
+	<li>Click the &quot;Submit&quot; button. 
+	</li>
+	<li>Read the Confidentiality Statement and click the &quot;I Accept&quot; button. 
+	</li>
+	<li>Click on the &quot;Go&quot; button next to the &quot;Product&quot; drop-down list. 
+	</li>
+	<li>Click on the &quot;Submit Issue&quot; link in the left navigation bar. 
+	</li>
+	<li>Choose &quot;Development Environment (tools,SDV,EAP)&quot; from the &quot;Product Type&quot; 
+	drop-down list. 
+	</li>
+	<li>If this is a software or license-related issue choose <b>&quot;Intel® IPP 
+	Samples*&quot;</b> from the &quot;Product Name&quot; drop-down list.</li>
+	<li>Enter your question and complete the fields in the windows that follow 
+	to successfully submit the issue. </li>
+</ol>
+<p>Please follow these guidelines when you submit a technical issue to Intel 
+Premier Support: <br>
+<a href="http://support.intel.com/support/performancetools/libraries/ipp/sb/cs-010663.htm">
+http://support.intel.com/support/performancetools/libraries/ipp/sb/cs-010663.htm</a>
+</p>
+<p>For product user forum, on-line help and other support information, please 
+visit:
+<a href="http://support.intel.com/support/performancetools/libraries/ipp/">
+http://support.intel.com/support/performancetools/libraries/ipp/</a></p>
+<FONT 
+size=-2>
+<P>Celeron, Dialogic, i386, i486, iCOMP, Intel, Intel logo, Intel386, Intel486, 
+Intel740, IntelDX2, IntelDX4, IntelSX2, Intel Inside, Intel Inside logo, Intel 
+NetBurst, Intel NetStructure, Intel Xeon, Intel XScale, Itanium, MMX, MMX logo, 
+Pentium, Pentium II Xeon, Pentium III Xeon, and VTune are trademarks or 
+registered trademarks of Intel Corporation or its subsidiaries in the United 
+States and other countries.<BR>&nbsp;<BR>* Other names and brands may be claimed 
+as the property of others.<BR>&nbsp;<BR>Copyright © 2002-2004 Intel Corporation. 
+</P></FONT></BODY></HTML>

@@ -1,0 +1,6 @@
+Please use the following information when submitting customer support requests
+
+Package ID: l_ipp-sample-speech-coding_p_4.1.008
+Package Contents: Intel(R) Integrated Performance Primitives 
+		  Speech Coding Samples for Linux*
+
