@@ -18,7 +18,9 @@
  */
 
 #define _GNU_SOURCE
+#define AST_MODULE "codec_g723"
 
+#include <asterisk.h>
 #include <asterisk/lock.h>
 #include <asterisk/translate.h>
 #include <asterisk/module.h>
@@ -61,7 +63,7 @@ static int defaultSendRate;
 
 static char *tdesc = "G723.1/PCM16 (signed linear) Codec Translator, based on IPP";
 
-struct ast_translator_pvt {
+struct g723_coder_pvt {
 
 	struct ast_frame f;
 
@@ -80,14 +82,12 @@ struct ast_translator_pvt {
 	int tail;
 };
 
-#define g723_coder_pvt ast_translator_pvt
-
-static struct ast_translator_pvt *lintog723_new(void) {
+static int lintog723_new(struct ast_trans_pvt *pvt) {
 	int i;
-	struct g723_coder_pvt *tmp;
+	struct g723_coder_pvt *tmp = pvt->pvt;
 	int eSize;
 
-	tmp = malloc(sizeof(struct g723_coder_pvt));
+	//tmp = malloc(sizeof(struct g723_coder_pvt));
 	if(tmp) {
 
 		apiG723Encoder_Alloc(&eSize);
@@ -102,15 +102,15 @@ static struct ast_translator_pvt *lintog723_new(void) {
 		localusecnt++;
 		ast_update_use_count();
 	}
-	return tmp;
+	return 0;
 }
 
-static struct ast_translator_pvt *g723tolin_new(void) {
+static int g723tolin_new(struct ast_trans_pvt *pvt) {
 	int i;
-	struct g723_coder_pvt *tmp;
+	struct g723_coder_pvt *tmp = pvt->pvt;
 	int dSize;
 
-	tmp = malloc(sizeof(struct g723_coder_pvt));
+	//tmp = malloc(sizeof(struct g723_coder_pvt));
 	if(tmp) {
 
 		apiG723Decoder_Alloc(&dSize);
@@ -123,7 +123,7 @@ static struct ast_translator_pvt *g723tolin_new(void) {
 		localusecnt++;
 		ast_update_use_count();
 	}
-	return tmp;
+	return 0;
 }
 
 static struct ast_frame *lintog723_sample(void) {
@@ -155,7 +155,8 @@ static struct ast_frame *g723tolin_sample(void) {
 /**
  * Retrieve a frame that has already been decompressed
  */
-static struct ast_frame *g723tolin_frameout(struct ast_translator_pvt *tmp) {
+static struct ast_frame *g723tolin_frameout(struct ast_trans_pvt *pvt) {
+	struct g723_coder_pvt *tmp = pvt->pvt;
 	if(!tmp->tail)
 		return NULL;
 	tmp->f.frametype = AST_FRAME_VOICE;
@@ -173,12 +174,13 @@ static struct ast_frame *g723tolin_frameout(struct ast_translator_pvt *tmp) {
 /**
  * Accept a frame and decode it at the end of the current buffer
  */
-static int g723tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f) {
+static int g723tolin_framein(struct ast_trans_pvt *pvt, struct ast_frame *f) {
 	int x, i;
 	int frameInfo;
 	int frameSize;
 	int sampleSize = MY_G723_1_SAMPLE_SIZE;
 	char *frame = (char *)f->data;
+	struct g723_coder_pvt *tmp = pvt->pvt;
 
 	int f_offset = 0;
 
@@ -215,6 +217,7 @@ static int g723tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 			apiG723Decode(tmp->decoder, frame + f_offset, 0, tmp->pcm_buf + tmp->tail);
 
 			tmp->tail += sampleSize;
+			pvt->samples += sampleSize;
 		} else {
 			ast_log(LOG_WARNING, "Out of G.723 buffer space\n");
 			return -1;
@@ -224,10 +227,12 @@ static int g723tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 	return 0;
 }
 
-static int lintog723_framein(struct ast_translator_pvt *tmp, struct ast_frame *f) {
+static int lintog723_framein(struct ast_trans_pvt *pvt, struct ast_frame *f) {
+	struct g723_coder_pvt *tmp = pvt->pvt;
 	if(tmp->tail + f->datalen/2 < sizeof(tmp->pcm_buf) / 2) {
 		memcpy((tmp->pcm_buf + tmp->tail), f->data, f->datalen);
 		tmp->tail += f->datalen/2;
+		pvt->samples += f->samples;
 	} else {
 		ast_log(LOG_WARNING, "Out of buffer space\n");
 		return -1;
@@ -235,7 +240,8 @@ static int lintog723_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 	return 0;
 }
 
-static struct ast_frame *lintog723_frameout(struct ast_translator_pvt *tmp) {
+static struct ast_frame *lintog723_frameout(struct ast_trans_pvt *pvt) {
+	struct g723_coder_pvt *tmp = pvt->pvt;
 	int x = 0, i;
 	int frameSize, sampleSize;
 
@@ -279,46 +285,53 @@ static struct ast_frame *lintog723_frameout(struct ast_translator_pvt *tmp) {
 	return &(tmp->f);
 }
 
-static void g723_release(struct ast_translator_pvt *pvt) {
+static void g723_release(struct ast_trans_pvt *pvt) {
+ 	struct g723_coder_pvt *tmp = pvt->pvt;
 	int i;
-	if(pvt->encoder != NULL) {
+	if(tmp->encoder != NULL) {
 		/* Free an encoder instance */
-		ippsFree(pvt->encoder);
+		ippsFree(tmp->encoder);
 
 	} else {
 		/* Free a decoder instance */
-		ippsFree(pvt->decoder);
+		ippsFree(tmp->decoder);
 	}
 
-	free(pvt);
+	//free(pvt);
 	localusecnt--;
 	ast_update_use_count();
 }
 
 static struct ast_translator g723tolin = {
-	"g723tolin",
-	AST_FORMAT_G723_1, AST_FORMAT_SLINEAR,
-	g723tolin_new,
-	g723tolin_framein,
-	g723tolin_frameout,
-	g723_release,
-	g723tolin_sample };
+	.name = "g723tolin",
+	.srcfmt = AST_FORMAT_G723_1, 
+	.dstfmt = AST_FORMAT_SLINEAR,
+	.newpvt = g723tolin_new,
+	.framein = g723tolin_framein,
+	.frameout = g723tolin_frameout,
+	.destroy = g723_release,
+	.sample = g723tolin_sample,
+	.desc_size = sizeof(struct g723_coder_pvt),
+	.buf_size = 8000 * 2};
 
 static struct ast_translator lintog723 = {
-	"lintog723",
-	AST_FORMAT_SLINEAR, AST_FORMAT_G723_1,
-	lintog723_new,
-	lintog723_framein,
-	lintog723_frameout,
-	g723_release,
-	lintog723_sample };
+	.name = "lintog723",
+	.srcfmt = AST_FORMAT_SLINEAR, 
+	.dstfmt = AST_FORMAT_G723_1,
+	.newpvt = lintog723_new,
+	.framein = lintog723_framein,
+	.frameout = lintog723_frameout,
+	.destroy = g723_release,
+	.sample = lintog723_sample,
+	.desc_size = sizeof(struct g723_coder_pvt),
+	.buf_size = 1000 };
 
-int reload(void) {
+/* int reload(void) {
 	// do nothing for now
 	return 0;
-}
+} */
 
-int load_module(void) {
+static int load_module(void) {
 	int res;
 
 	/* We should read this from a config file */
@@ -332,7 +345,7 @@ int load_module(void) {
 	return res;
 }
 
-int unload_module(void) {
+static int unload_module(void) {
 	int res;
 	ast_mutex_lock(&localuser_lock);
 	res = ast_unregister_translator(&lintog723);
@@ -344,17 +357,19 @@ int unload_module(void) {
 	return res;
 }
 
-char *description(void) {
+/* char *description(void) {
 	return tdesc;
-}
+} */
 
-int usecount(void) {
+/* int usecount(void) {
 	int res;
 	STANDARD_USECOUNT(res);
 	return res;
-}
+} */
 
-char *key() {
+/* char *key() {
 	return ASTERISK_GPL_KEY;
-}
+} */
+
+AST_MODULE_INFO_STANDARD(ASTERISK_GPL_KEY, "G.723.1 Coder/Decoder");
 

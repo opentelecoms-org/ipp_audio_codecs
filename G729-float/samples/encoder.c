@@ -25,6 +25,8 @@
 //
 */
 
+#include <asterisk.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,6 +35,7 @@
 #include <ipps.h>
 #include <ippsc.h>
 #include "encoder.h"
+
 
 #ifdef _DEBUG
 	#include <CRTDBG.H>

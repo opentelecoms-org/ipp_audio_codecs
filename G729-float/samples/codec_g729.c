@@ -18,12 +18,15 @@
  */
 
 #define _GNU_SOURCE
+#define AST_MODULE "codec_g729"
 
+#include <asterisk.h>
 #include <asterisk/lock.h>
 #include <asterisk/translate.h>
 #include <asterisk/module.h>
 #include <asterisk/logger.h>
 #include <asterisk/channel.h>
+#include <asterisk/utils.h>
 #include <pthread.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -76,10 +79,10 @@ struct ast_translator_pvt {
 
 #define g729_coder_pvt ast_translator_pvt
 
-static struct ast_translator_pvt *lintog729_new(void) {
+static int lintog729_new(struct ast_trans_pvt *pvt) {
 	int i;
-	struct g729_coder_pvt *tmp;
-	tmp = malloc(sizeof(struct g729_coder_pvt));
+	struct g729_coder_pvt *tmp = pvt->pvt;
+	//tmp = malloc(sizeof(struct g729_coder_pvt));
 	if(tmp) {
 		USC_CODEC_Fxns->std.GetInfo((USC_Handle)NULL, &tmp->pInfo);
 		((USC_Option*)tmp->pInfo.params)->modes.truncate = 1;
@@ -89,14 +92,14 @@ static struct ast_translator_pvt *lintog729_new(void) {
 		if(!(tmp->pBanks = (USC_MemBank*)ippsMalloc_8u(sizeof(USC_MemBank)*(tmp->nbanks)))) {
                   ast_log(LOG_WARNING, "ippsMalloc_8u failed allocating %d bytes", sizeof(USC_MemBank)*(tmp->nbanks));
                   /* printf("\nLow memory: %d bytes not allocated\n",sizeof(USC_MemBank)*nbanks); */
-                  return NULL;
+                  return 1;
                 }
 		USC_CODEC_Fxns->std.MemAlloc(tmp->pInfo.params, tmp->pBanks);
 		for(i=0; i<tmp->nbanks;i++) {
 			if(!(tmp->pBanks[i].pMem = ippsMalloc_8u(tmp->pBanks->nbytes))) {
 				ast_log(LOG_WARNING, "ippsMalloc_8u failed allocating %d bytes", sizeof(USC_MemBank)*(tmp->nbanks));
 				/* printf("\nLow memory: %d bytes not allocated\n",tmp->pBanks->nbytes); */
-				return NULL;
+				return 1;
 			}
 		}
 
@@ -123,13 +126,14 @@ static struct ast_translator_pvt *lintog729_new(void) {
 		localusecnt++;
 		ast_update_use_count();
 	}
-	return tmp;
+	
+	return 0;
 }
 
-static struct ast_translator_pvt *g729tolin_new(void) {
+static int g729tolin_new(struct ast_trans_pvt *pvt) {
 	int i;
-	struct g729_coder_pvt *tmp;
-	tmp = malloc(sizeof(struct g729_coder_pvt));
+	struct g729_coder_pvt *tmp = pvt->pvt;
+	//tmp = malloc(sizeof(struct g729_coder_pvt));
 	if(tmp) {
 		USC_CODEC_Fxns->std.GetInfo((USC_Handle)NULL, &(tmp->pInfo));	
 		((USC_Option*)tmp->pInfo.params)->modes.bitrate = 0;
@@ -141,14 +145,14 @@ static struct ast_translator_pvt *g729tolin_new(void) {
 		USC_CODEC_Fxns->std.NumAlloc(tmp->pInfo.params, &tmp->nbanks);
 		if(!(tmp->pBanks = (USC_MemBank*)ippsMalloc_8u(sizeof(USC_MemBank)*(tmp->nbanks)))) {
 			ast_log(LOG_WARNING, "ippsMalloc_8u failed allocating %d bytes", sizeof(USC_MemBank)*(tmp->nbanks));
-			return NULL;
+			return 1;
 		}
 		USC_CODEC_Fxns->std.MemAlloc(tmp->pInfo.params, tmp->pBanks);
 		for(i=0; i<tmp->nbanks;i++) {
 			if(!(tmp->pBanks[i].pMem = ippsMalloc_8u(tmp->pBanks->nbytes))) {
 				ast_log(LOG_WARNING, "ippsMalloc_8u failed allocating %d bytes", sizeof(USC_MemBank)*(tmp->nbanks));
 				/* printf("\nLow memory: %d bytes not allocated\n", tmp->pBanks->nbytes); */
-				return NULL;
+				return 1;
 			}
 		}
 
@@ -176,7 +180,7 @@ static struct ast_translator_pvt *g729tolin_new(void) {
 		localusecnt++;
 		ast_update_use_count();
 	}
-	return tmp;
+	return 0;
 }
 
 static struct ast_frame *lintog729_sample(void) {
@@ -208,7 +212,8 @@ static struct ast_frame *g729tolin_sample(void) {
 /**
  * Retrieve a frame that has already been decompressed
  */
-static struct ast_frame *g729tolin_frameout(struct ast_translator_pvt *tmp) {
+static struct ast_frame *g729tolin_frameout(struct ast_trans_pvt *pvt) {
+	struct g729_coder_pvt *tmp = pvt->pvt;
 	if(!tmp->tail)
 		return NULL;
 	tmp->f.frametype = AST_FRAME_VOICE;
@@ -226,7 +231,8 @@ static struct ast_frame *g729tolin_frameout(struct ast_translator_pvt *tmp) {
 /**
  * Accept a frame and decode it at the end of the current buffer
  */
-static int g729tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f) {
+static int g729tolin_framein(struct ast_trans_pvt *pvt, struct ast_frame *f) {
+	struct g729_coder_pvt *tmp = pvt->pvt;
 	int x, i;
 	int frameSize = 0;
 	
@@ -245,6 +251,7 @@ static int g729tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 			tmp->bitStream.pBuffer = f->data + x;
 			tmp->pcmStream.pBuffer = tmp->pcm_buf + tmp->tail;
 			USC_CODEC_Fxns->std.Decode (tmp->codec, &tmp->bitStream, &tmp->pcmStream);
+			pvt->samples += 80;
 
 			tmp->tail += 80;
 		} else {
@@ -255,10 +262,12 @@ static int g729tolin_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 	return 0;
 }
 
-static int lintog729_framein(struct ast_translator_pvt *tmp, struct ast_frame *f) {
+static int lintog729_framein(struct ast_trans_pvt *pvt, struct ast_frame *f) {
+	struct g729_coder_pvt *tmp = pvt->pvt;
 	if(tmp->tail + f->datalen/2 < sizeof(tmp->pcm_buf) / 2) {
 		memcpy((tmp->pcm_buf + tmp->tail), f->data, f->datalen);
 		tmp->tail += f->datalen/2;
+		pvt->samples += f->samples;
 	} else {
 		ast_log(LOG_WARNING, "Out of buffer space\n");
 		return -1;
@@ -266,7 +275,8 @@ static int lintog729_framein(struct ast_translator_pvt *tmp, struct ast_frame *f
 	return 0;
 }
 
-static struct ast_frame *lintog729_frameout(struct ast_translator_pvt *tmp) {
+static struct ast_frame *lintog729_frameout(struct ast_trans_pvt *pvt) {
+	struct g729_coder_pvt *tmp = pvt->pvt;
 
 
 	int x = 0, i;
@@ -300,44 +310,52 @@ static struct ast_frame *lintog729_frameout(struct ast_translator_pvt *tmp) {
 	return &(tmp->f);
 }
 
-static void g729_release(struct ast_translator_pvt *pvt) {
+static void g729_release(struct ast_trans_pvt *pvt) {
+	struct g729_coder_pvt *tmp = pvt->pvt;
+
 	int i;
-	for(i = 0; i < pvt->nbanks; i++) {
-		if(pvt->pBanks[i].pMem)
-			ippsFree(pvt->pBanks[i].pMem);	
-		pvt->pBanks[i].pMem=NULL;
+	for(i = 0; i < tmp->nbanks; i++) {
+		if(tmp->pBanks[i].pMem)
+			ippsFree(tmp->pBanks[i].pMem);	
+		tmp->pBanks[i].pMem=NULL;
 	}
-	if(pvt->pBanks)
-		ippsFree(pvt->pBanks);
-	free(pvt);
+	if(tmp->pBanks)
+		ippsFree(tmp->pBanks);
+	//free(tmp);
 	localusecnt--;
 	ast_update_use_count();
 }
 
 static struct ast_translator g729tolin = {
-	"g729tolin",
-	AST_FORMAT_G729A, AST_FORMAT_SLINEAR,
-	g729tolin_new,
-	g729tolin_framein,
-	g729tolin_frameout,
-	g729_release,
-	g729tolin_sample };
+	.name = "g729tolin",
+	.srcfmt = AST_FORMAT_G729A, 
+	.dstfmt = AST_FORMAT_SLINEAR,
+	.newpvt = g729tolin_new,
+	.framein = g729tolin_framein,
+	.frameout = g729tolin_frameout,
+	.destroy = g729_release,
+	.sample = g729tolin_sample,
+	.desc_size = sizeof(struct g729_coder_pvt),
+	.buf_size = 8000 * 2};
 
 static struct ast_translator lintog729 = {
-	"lintog729",
-	AST_FORMAT_SLINEAR, AST_FORMAT_G729A,
-	lintog729_new,
-	lintog729_framein,
-	lintog729_frameout,
-	g729_release,
-	lintog729_sample };
+	.name = "lintog729",
+	.srcfmt = AST_FORMAT_SLINEAR, 
+	.dstfmt = AST_FORMAT_G729A,
+	.newpvt = lintog729_new,
+	.framein = lintog729_framein,
+	.frameout = lintog729_frameout,
+	.destroy = g729_release,
+	.sample = lintog729_sample,
+	.desc_size = sizeof(struct g729_coder_pvt),
+	.buf_size = 1000 };
 
-int reload(void) {
+/* int reload(void) {
 	// do nothing for now
 	return 0;
-}
+} */
 
-int load_module(void) {
+static int load_module(void) {
 	USC_CODEC_Fxns = USC_GetCodecByName ();
 	int res;
 	res = ast_register_translator(&g729tolin);
@@ -348,7 +366,7 @@ int load_module(void) {
 	return res;
 }
 
-int unload_module(void) {
+static int unload_module(void) {
 	int res;
 	ast_mutex_lock(&localuser_lock);
 	res = ast_unregister_translator(&lintog729);
@@ -360,17 +378,19 @@ int unload_module(void) {
 	return res;
 }
 
-char *description(void) {
+/* char *description(void) {
 	return tdesc;
-}
+} */
 
-int usecount(void) {
+/* int usecount(void) {
 	int res;
 	STANDARD_USECOUNT(res);
 	return res;
-}
+} */
 
-char *key() {
+/* char *key() {
 	return ASTERISK_GPL_KEY;
-}
+} */
+
+AST_MODULE_INFO_STANDARD(ASTERISK_GPL_KEY, "G.729 Coder/Decoder");
 

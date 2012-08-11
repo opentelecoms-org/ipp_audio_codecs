@@ -114,8 +114,7 @@ Step 4a
 
 Select compiler optimizations
 
-vi G729-float/Makefile
-vi G723.1/Makefile
+vi makeopts
 
 Note: if you optimize for a more modern process than the processor
 in your machine, the codec will not run and Asterisk will not start.
