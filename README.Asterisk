@@ -1,4 +1,9 @@
 
+
+Revision SVN 8
+- fix documentation
+- diff at proper level
+
 Revision SVN 6
 - convert to using subversion
 - update the documentation
@@ -28,6 +33,15 @@ Revision 1.3
 - added Intel links
 - fixed patch command
 - added notes about build dependencies
+
+Prerequisites
+-------------
+
+- This code has been compiled with gcc 4.  To use with gcc 3, you may need
+  to change the `-mtune' to `-mcpu' in makeopts, and some other small
+  changes.
+
+
 
 Step 1a
 -------
@@ -107,16 +121,16 @@ Step 4
 Apply my patch
 
 cd ipp_sample/
-patch -p0 < /tmp/ipp-svn6.diff
+patch -p0 < /tmp/ipp-svn8.diff
 
 Step 4a
 -------
 
 Select compiler optimizations
 
-vi makeopts
+vi speech-coding/makeopts
 
-Note: if you optimize for a more modern process than the processor
+Note: if you optimize for a more modern processor than the processor
 in your machine, the codec will not run and Asterisk will not start.
 The default is Pentium 4.  If you have a Pentium III, you must change
 the optimizations.
