@@ -121,6 +121,7 @@ static struct ast_translator_pvt *lintog729_new(void) {
 
 		tmp->tail = 0;
 		localusecnt++;
+		ast_update_use_count();
 	}
 	return tmp;
 }
@@ -173,6 +174,7 @@ static struct ast_translator_pvt *g729tolin_new(void) {
 
 		tmp->tail = 0;
 		localusecnt++;
+		ast_update_use_count();
 	}
 	return tmp;
 }
@@ -309,6 +311,7 @@ static void g729_release(struct ast_translator_pvt *pvt) {
 		ippsFree(pvt->pBanks);
 	free(pvt);
 	localusecnt--;
+	ast_update_use_count();
 }
 
 static struct ast_translator g729tolin = {
@@ -328,6 +331,11 @@ static struct ast_translator lintog729 = {
 	lintog729_frameout,
 	g729_release,
 	lintog729_sample };
+
+int reload(void) {
+	// do nothing for now
+	return 0;
+}
 
 int load_module(void) {
 	USC_CODEC_Fxns = USC_GetCodecByName ();

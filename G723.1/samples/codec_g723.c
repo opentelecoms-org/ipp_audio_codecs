@@ -100,6 +100,7 @@ static struct ast_translator_pvt *lintog723_new(void) {
 
 		tmp->tail = 0;
 		localusecnt++;
+		ast_update_use_count();
 	}
 	return tmp;
 }
@@ -120,6 +121,7 @@ static struct ast_translator_pvt *g723tolin_new(void) {
 
 		tmp->tail = 0;
 		localusecnt++;
+		ast_update_use_count();
 	}
 	return tmp;
 }
@@ -290,6 +292,7 @@ static void g723_release(struct ast_translator_pvt *pvt) {
 
 	free(pvt);
 	localusecnt--;
+	ast_update_use_count();
 }
 
 static struct ast_translator g723tolin = {
@@ -309,6 +312,11 @@ static struct ast_translator lintog723 = {
 	lintog723_frameout,
 	g723_release,
 	lintog723_sample };
+
+int reload(void) {
+	// do nothing for now
+	return 0;
+}
 
 int load_module(void) {
 	int res;
