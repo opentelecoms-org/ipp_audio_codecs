@@ -19,7 +19,8 @@ EXESFX=
 # three lines to build statically linked version
 IPPINCLS=-I$(IPPROOT)/include -include $(IPPROOT)/tools/staticlib/ipp_$(IPPCORE).h
 IPPLIBS=-L$(IPPROOT)/lib -lippscmerged -lippsrmerged -lippsmerged -lippcore
-LDFLAGS=-static-libcxa
+LDFLAGS=-static
+# -libcxa
 
 # Optimizations, choose one set only depending on CPU type (or debug at bottom)
 #OPTIMIZE= -O2
