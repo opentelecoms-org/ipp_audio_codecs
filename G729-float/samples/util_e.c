@@ -26,7 +26,7 @@
 */
 #include "util_e.h"
 
-USC_Fxns* USC_GetCodecByName (void)
+USC_Fxns* USC_GetCodecByName_xx2 (void)
 {
     return &USC_G729FP_Fxns;
 }
@@ -68,7 +68,7 @@ static int ReadRates(FILE *f_rat, char **rat_buff, int *nRates)
     return 0;
 }
 
-int text2rate(char *strRate, char **rat_buff, int *nRates, USC_CodecInfo *pInfo)
+int text2rate_xx1(char *strRate, char **rat_buff, int *nRates, USC_CodecInfo *pInfo)
 {
      if(!strcmp(strRate,"A")){
         ((USC_Option*)pInfo->params)->modes.bitrate=G729A_CODEC;
@@ -128,7 +128,7 @@ int getInFrameSize(void)
   return(G729_SPEECH_FRAME*sizeof(short));
 }
                     
-int getOutFrameSize(void)
+int getOutFrameSize_xx3(void)
 {
   return(BITSTREAM_FILE_FRAME_SIZE*sizeof(short));
 }

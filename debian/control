@@ -1,0 +1,15 @@
+Source: asterisk-ipp-codecs
+Section: admin
+Priority: extra
+Maintainer: Daniel Pocock <daniel@pocock.com.au>
+Build-Depends: debhelper (>> 4.0.0), asterisk-dev
+
+Package: asterisk-ipp-codecs
+Architecture: i386
+Depends: asterisk
+Description: G.723.1 and G.729 modules for Asterisk
+ asterisk-ipp-codecs provides the G.723.1 and G.729 modules for Asterisk
+ in a binary format.  These codecs are patented and in most countries
+ you will need a license to use them legally.  Please see
+ http://www.readytechnology.co.uk/open/g729 for more details
+

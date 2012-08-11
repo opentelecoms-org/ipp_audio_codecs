@@ -85,11 +85,11 @@ extern USC_Fxns USC_G729FP_Fxns;
 /*
    GetCodecByName() - quest codec functions table by codec name
 */
-USC_Fxns* USC_GetCodecByName(void);
-int text2rate(char *strRate, char **rat_buff, int *nRates, USC_CodecInfo *pInfo);
+USC_Fxns* USC_GetCodecByName_xx2(void);
+int text2rate_xx1(char *strRate, char **rat_buff, int *nRates, USC_CodecInfo *pInfo);
 int checkVad(char *strVad, int *mode);
 int getInFrameSize(void);
-int getOutFrameSize(void);
+int getOutFrameSize_xx3(void);
 int Bits2Ref(USC_PCMStream in, USC_Bitstream out, char *out_buff_cur);
 
 #endif /*UTIL_E_H*/

@@ -1,0 +1,213 @@
+
+Revision 1.6 (2005-09-03)
+- unified G.723.1 and G.729 patches into a single diff, so you can
+  study both more easily
+- fix memory leak - thanks to Rafael for spotting the missing `!' in Intel's
+  code
+- compile the command line encoder and decoder for G.729 such that
+  they produce raw G.729 rather than ITU demonstration bitstreams.
+- add Debian packaging files
+- add runme.sh
+
+Revision 1.5
+- libimf.so and libimf.a notes
+
+Revision 1.4
+- static linking
+- compiler optimizations
+
+Revision 1.3
+- added Intel links
+- fixed patch command
+- added notes about build dependencies
+
+Step 1a
+-------
+Download the code from Intel
+
+cd /tmp
+wget ftp://download.intel.com/software/products/ipp/downloads/samples/l_ipp-sample-speech-coding_p_4.1.008.tgz
+wget ftp://download.intel.com/software/products/ipp/downloads/l_ipp_ia32_itanium_p_4_1.tar
+
+Step 1b
+-------
+
+Install Asterisk header files
+
+On Debian, just type
+
+  apt-get build-dep asterisk
+
+Specifically, you need the *.h files that come with Asterisk
+
+Step 2a
+-------
+
+Register with Intel
+
+See http://www.intel.com/software/products/ipp/
+
+a) register on Intel's site under the 'free non-commercial use' section
+b) obtain the license number and a license key file
+c) put the license key file in the place specified by Intel's documentation
+d) run the installer
+
+Step 2b
+-------
+
+Install IPP libraries.
+
+mkdir /tmp/ipp-tmp
+cd /tmp/ipp-tmp
+tar xf /tmp/l_ipp_ia32_itanium_p_4_1.tar
+
+Follow Intel's instructions to install IPP.  If using Debian, the Intel
+installed will stop half way, leaving a .rpm file sitting in a subdirectory
+of /tmp.  You can install the .rpm file using `alien' and then proceed.
+
+Intel's instructions and licensing information (including Open Source
+version information) are at http://www.intel.com/software/products/ipp/
+
+Once you've installed IPP and agreed to the license terms, you may need to
+copy the libraries from one PC to another (eg, from your development machine
+to a production server).  You just need to copy the contents of the following
+directory:
+
+/opt/intel/ipp41/ia32_itanium/sharedlib/
+
+without re-running the install process.
+
+If you use static linking, you DON'T need to copy the libraries onto
+every computer where you run the codec.  You only need the libraries
+on the computer where you compile the codec.
+
+Step 3
+------
+
+Install IPP sample code
+
+cd /usr/local/src
+tar xzf /tmp/l_ipp-sample-speech-coding_p_4.1.008.tgz
+
+Step 4
+------
+
+Apply my patch
+
+cd intel1/ipp_sample/speech-coding/
+patch -p1 < /tmp/ipp-050903.diff
+
+Step 4a
+-------
+
+Select compiler optimizations
+
+vi G729-float/Makefile
+vi G723.1/Makefile
+
+Step 5a
+-------
+
+If you have icc 8.0 libimf, move intel_cc_80/lib/libimf.so to 
+somewhere out of the way.  This will allow you to link libimf.a
+statically with codec_g729.so
+
+Step 5b
+-------
+
+**************************************
+* New:                               *
+* If NOT using Debian:               *
+*   chmod a+x runme.sh               *
+*   ./runme.sh                       *
+* or                                 *
+*   chmod a+x runme.sh               *
+*   ./runme.sh install               *
+*                                    *
+* If you are using Debian:           *
+*                                    *
+*  chmod a+x runme.sh debian/rules   *
+*  dpkg-buildpackage -rfakeroot      *
+**************************************
+
+Step 6
+------
+
+Deploy
+
+cp codec_g72*.so /usr/lib/asterisk/modules   
+   (the target location depends on your system)
+
+or just do ./runme.sh install
+
+or if using Debian, dpkg -i ../asterisk-ipp-codecs_1.0-1_i386.deb
+
+If you haven't used static linking (now the default),
+modify /etc/init.d/asterisk:
+
+export LD_LIBRARY_PATH=/opt/intel/ipp41/ia32_itanium/sharedlib:/opt/intel/ipp41/ia32_itanium/sharedlib/linux32:$LD_LIBRARY_PATH
+
+You may need to insert the following into your 
+sip.conf, iax.conf, h323.conf, etc:
+
+allow=g729
+
+Now restart Asterisk
+
+/etc/init.d/asterisk restart
+
+Step 7
+------
+
+Verify install
+
+At the shell prompt:
+# asterisk -r
+
+At the Asterisk prompt:
+>show translation
+
+If the G.723.1 and G.729 columns have -'s instead of numbers, then 
+the codecs are not working properly.
+
+============================
+COMMAND LINE ENCODER/DECODER
+============================
+
+G.729 only at present
+
+Do you want to record greetings and IVR messages in G.729 format so
+that your CPU doesn't have to transcode every time a call takes place?
+
+Most likely, yes, you do want this.
+
+Now you can.  The original Intel command line encoder and decoder utilities
+(g729fpencoder and g729fpdecoder) work with bitstream files in a
+special format used by the ITU test suite.  This is not the same format
+that Asterisk expects when reading/writing raw G.729.
+
+The utilities `my_enc' and `my_dec' have been designed to work
+with the raw format.  Files generated by `my_enc' can be read by Asterisk
+without any transcoding.
+
+Usage:
+
+	my_enc audio.raw audio.g729
+
+	my_dec audio.g729 audio.raw
+
+Where:
+	audio.raw must be 
+		- 16 bit signed linear audio, 
+		- mono, 
+		- 8000Hz sample rate
+
+To convert a WAV file into the raw uncompressed audio before feeding it
+to `my_enc', you would use the `sox' utility (available on all Unix systems):
+
+	sox audio.wav -t raw -r 8000 -s -w -c 1 audio.raw
+
+To convert a GSM file (such as those distributed with Asterisk), do:
+
+	sox audio.gsm -t raw -r 8000 -s -w -c 1 audio.raw
+

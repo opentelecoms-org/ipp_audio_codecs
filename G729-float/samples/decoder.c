@@ -448,10 +448,10 @@ int main(int argc, char *argv[])
    }  
    for (iTh=0; iTh < n_thread; iTh++) {
       for(i=0; i<nbanks;i++){
-         if(!(ThArg[iTh].pBanks[i].pMem)) ippsFree(ThArg[iTh].pBanks[i].pMem);
+         if((ThArg[iTh].pBanks[i].pMem)) ippsFree(ThArg[iTh].pBanks[i].pMem);
          ThArg[iTh].pBanks[i].pMem = NULL;
       }
-      if(!(ThArg[iTh].pBanks)) ippsFree(ThArg[iTh].pBanks);
+      if((ThArg[iTh].pBanks)) ippsFree(ThArg[iTh].pBanks);
       ThArg[iTh].pBanks = NULL;
       ippsFree(out_buff[iTh]);
       ippsFree(ThArg[iTh].bitstream_buf);

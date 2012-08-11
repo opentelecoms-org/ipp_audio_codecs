@@ -1,0 +1,6 @@
+asterisk-ipp-codecs (1.0-1) stable; urgency=low
+
+  * Initial Debian release.
+
+ -- Daniel Pocock <daniel@pocock.com.au>  Thu, 05 May 2005 14:00:00 +0100
+

@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
    int outFrameSize = 0;
    int emode = 0;
    
-   USC_CODEC_Fxns = USC_GetCodecByName ();
+   USC_CODEC_Fxns = USC_GetCodecByName_xx2 ();
    USC_CODEC_Fxns->std.GetInfo((USC_Handle)NULL, &pInfo); /* codec info */
    
    
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
       argv++;
       if ('-' == (*argv)[0]) { 
          if (!strncmp("-r",*argv,2)){ /* check if rate is specified */
-            if (text2rate(*argv+2, &rat_buff, &nRates, &pInfo)) {
+            if (text2rate_xx1(*argv+2, &rat_buff, &nRates, &pInfo)) {
                continue;
             }
          }else if (checkVad(*argv, &emode)) { /* check if vad is specified */
@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
 
    /* compute the maximum size of the output */
    inFrameSize = getInFrameSize();
-   outFrameSize = getOutFrameSize();
+   outFrameSize = getOutFrameSize_xx3();
 
    in_len_cur = in_len;
    in_buff_cur = in_buff;
@@ -452,10 +452,10 @@ int main(int argc, char *argv[])
    }
    for (iTh=0; iTh < n_thread; iTh++) {
       for(i=0; i<nbanks;i++){
-         if(!(ThArg[iTh].pBanks[i].pMem)) ippsFree(ThArg[iTh].pBanks[i].pMem);
+         if((ThArg[iTh].pBanks[i].pMem)) ippsFree(ThArg[iTh].pBanks[i].pMem);
          ThArg[iTh].pBanks[i].pMem = NULL;
       }
-      if(!(ThArg[iTh].pBanks)) ippsFree(ThArg[iTh].pBanks);
+      if((ThArg[iTh].pBanks)) ippsFree(ThArg[iTh].pBanks);
       ThArg[iTh].pBanks = NULL;
       ippsFree(out_buff[iTh]);
       ippsFree(ThArg[iTh].bitstream_buf);
