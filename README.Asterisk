@@ -1,4 +1,12 @@
 
+Revision SVN 6
+- convert to using subversion
+- update the documentation
+- support for Asterisk 1.2.x
+
+Revision 1.7 (2006-09-03)
+- update Intel filenames in documentation, use IPP 4.1.2 instead of 4.1
+
 Revision 1.6 (2005-09-03)
 - unified G.723.1 and G.729 patches into a single diff, so you can
   study both more easily
@@ -27,7 +35,7 @@ Download the code from Intel
 
 cd /tmp
 wget ftp://download.intel.com/software/products/ipp/downloads/samples/l_ipp-sample-speech-coding_p_4.1.008.tgz
-wget ftp://download.intel.com/software/products/ipp/downloads/l_ipp_ia32_itanium_p_4_1.tar
+wget ftp://download.intel.com/software/products/ipp/downloads/l_ipp_ia32_itanium_p_4_1_2.tar
 
 Step 1b
 -------
@@ -36,6 +44,7 @@ Install Asterisk header files
 
 On Debian, just type
 
+  apt-get install asterisk-dev
   apt-get build-dep asterisk
 
 Specifically, you need the *.h files that come with Asterisk
@@ -57,9 +66,12 @@ Step 2b
 
 Install IPP libraries.
 
+(For more detailed help with this stage, see
+http://www.readytechnology.co.uk/open/ipp-codecs/intel-notes/ipp-4.1.2.txt )
+
 mkdir /tmp/ipp-tmp
 cd /tmp/ipp-tmp
-tar xf /tmp/l_ipp_ia32_itanium_p_4_1.tar
+tar xf /tmp/l_ipp_ia32_itanium_p_4_1_2.tar
 
 Follow Intel's instructions to install IPP.  If using Debian, the Intel
 installed will stop half way, leaving a .rpm file sitting in a subdirectory
@@ -77,9 +89,9 @@ directory:
 
 without re-running the install process.
 
-If you use static linking, you DON'T need to copy the libraries onto
-every computer where you run the codec.  You only need the libraries
-on the computer where you compile the codec.
+If you use static linking (now the default method), you DON'T need to 
+copy the libraries onto every computer where you run the codec.  You 
+only need the libraries on the computer where you compile the codec.
 
 Step 3
 ------
@@ -94,8 +106,8 @@ Step 4
 
 Apply my patch
 
-cd intel1/ipp_sample/speech-coding/
-patch -p1 < /tmp/ipp-050903.diff
+cd ipp_sample/
+patch -p0 < /tmp/ipp-svn6.diff
 
 Step 4a
 -------
@@ -104,6 +116,11 @@ Select compiler optimizations
 
 vi G729-float/Makefile
 vi G723.1/Makefile
+
+Note: if you optimize for a more modern process than the processor
+in your machine, the codec will not run and Asterisk will not start.
+The default is Pentium 4.  If you have a Pentium III, you must change
+the optimizations.
 
 Step 5a
 -------
