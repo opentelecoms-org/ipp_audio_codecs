@@ -25,6 +25,8 @@ typedef char vm_char;
 #include <sys/types.h>
 #include <semaphore.h>
 
+#include <asterisk/lock.h>
+
 /* vm_thread.h */
 typedef struct {
 	pthread_t handle;
@@ -33,8 +35,8 @@ typedef struct {
 
 /* vm_event.h */
 typedef struct {
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
+	ast_cond_t cond;
+	ast_mutex_t mutex;
 	int manual;
 	int state;
 } vm_event;
@@ -48,14 +50,14 @@ typedef struct {
 
 /* vm_mutex.h */
 typedef struct {
-	pthread_mutex_t handle;
+	ast_mutex_t handle;
 	int is_valid;
 } vm_mutex;
 
 /* vm_semaphore.h */
 typedef struct {
-    pthread_cond_t cond;
-    pthread_mutex_t mutex;
+    ast_cond_t cond;
+    ast_mutex_t mutex;
     int count;
 } vm_semaphore;
 
